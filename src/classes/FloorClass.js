@@ -1,4 +1,5 @@
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import * as THREE from 'three'
 
 
 
@@ -14,11 +15,22 @@ class Floor {
 
     init(scene) {
         this.scene = scene
+        this.floor
 
         this.modelLoader.load('./assets/models/floor.glb', (glb) => {
             //console.log(glb)
+            glb.scene.traverse(child =>  {
+                if(child instanceof THREE.Mesh) {
+                    this.floor = child
 
-             this.scene.add(glb.scene)
+                }
+
+
+            })
+
+            this.floor.translateY(-3)
+
+             this.scene.add(this.floor)
 
         })
     }
