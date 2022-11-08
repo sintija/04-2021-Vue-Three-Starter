@@ -26,12 +26,16 @@ class MainThreeScene {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.debug.checkShaderErrors = true;
+    //this.renderer.outputEncoding = THREE.sRGBEncoding
     container.appendChild(this.renderer.domElement);
 
     //MAIN SCENE INSTANCE
     const color = new THREE.Color(0x151515)
+    //adding the fog effect to hide the floor 
+    const fog = new THREE.Fog(color, 15, 30)
 
     this.scene = new THREE.Scene();
+    this.scene.fog = fog
     this.scene.background = color
 
     //CAMERA AND ORBIT CONTROLLER
@@ -96,7 +100,9 @@ class MainThreeScene {
   }
 
   update() {
+  
     this.renderer.render(this.scene, this.camera);
+    this.scene.rotateY(0.0015);
     SpherePillards.update();
     Spectrum.update();
     Particles.update();
