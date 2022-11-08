@@ -38,13 +38,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped lang="stylus">
-.audioButton {
-        position: absolute; 
-        top: 0; 
-        left: 0;
-    button { 
-        background: red;
-    }
-}
+
 
 </style>

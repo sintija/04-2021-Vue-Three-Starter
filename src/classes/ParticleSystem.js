@@ -32,7 +32,7 @@ class Particles {
             });
 
         this.Particles = new THREE.Points(this.particlesGeom, this.particleMaterial);
-        console.log(this.particlesGeom.attributes.position.array);
+        (this.particlesGeom.attributes.position.array);
         this.scene.add(this.Particles)
     }
 
