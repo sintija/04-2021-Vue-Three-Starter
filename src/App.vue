@@ -1,14 +1,17 @@
 <template>
     <ThreeScene />
+     <AudioButton />
 </template>
 
 <script>
 import ThreeScene from "./components/ThreeScene.vue";
+import AudioButton from "./components/AudioButton.vue";
 
 export default {
     name: "App",
     components: {
         ThreeScene,
+        AudioButton,
     },
 };
 </script>
@@ -24,5 +27,7 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    width: 100px;
+    height: 50px; 
 }
 </style>

@@ -8,6 +8,7 @@ import MyGUI from "../utils/MyGUI";
 import SpherePillards from "./SpherePillardsClass";
 import Floor from "./FloorClass";
 import Spectrum from "./SpectrumClass";
+import Particles from "./ParticleSystem";
 import { Sphere } from "three";
 
 class MainThreeScene {
@@ -54,6 +55,7 @@ class MainThreeScene {
     SpherePillards.init(this.scene);
     Floor.init(this.scene);
     Spectrum.init(this.scene);
+    Particles.init(this.scene);
 
     MyGUI.hide();
     if (config.myGui) MyGUI.show();
@@ -67,6 +69,7 @@ class MainThreeScene {
     this.renderer.render(this.scene, this.camera);
     SpherePillards.update();
     Spectrum.update();
+    Particles.update();
 
   }
 

@@ -1,3 +1,7 @@
+import RAF from '../utils/RAF'
+
+
+
 class SoundReactor {
 
     constructor(audioUrl) {
@@ -7,6 +11,7 @@ class SoundReactor {
         this.analyser
         this.fdata
         this.url = audioUrl
+        this.playFlag = false
 
         this.bind()
     }
@@ -21,12 +26,28 @@ class SoundReactor {
         this.audioSource.connect(this.analyser);
         this.audioSource.connect(this.ctx.destination);
         this.fdata = new Uint8Array(this.analyser.frequencyBinCount);
+        this.audio.currentTime = 42
 
+      
+    }
+
+    play() {
         this.audio.play()
+        this.playFlag = true
+        RAF.subscribe('audioReactorUpdate', this.update)
+
+    }
+
+    pause() {
+        this.audio.pause()
+        this.playFlag = false
+        RAF.unsubscribe('audioReactorUpdate')
+
     }
 
     update() {
         this.analyser.getByteFrequencyData(this.fdata);
+        //console.log(this.fdata);
 
     }
 
@@ -37,5 +58,5 @@ class SoundReactor {
 
 }
 
-const _instance = new SoundReactor()
+const _instance = new SoundReactor("assets/nothanks.mp3")
 export default _instance;

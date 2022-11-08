@@ -7,6 +7,9 @@ import {
     SphereGeometry
 } from 'three'
 
+import SoundReactor from './SoundReactor'
+import MyGUI from '../utils/MyGUI'
+
 
 class SpherePillards {
     constructor() {
@@ -15,13 +18,18 @@ class SpherePillards {
         this.modelLoader = new GLTFLoader()
         //instantiate the  texture loader
         this.texLoader = new THREE.TextureLoader()
+        this.params = {
+            waveSpeed: 1,
+            subDiv: 3
+
+        }
 
     }
 
     init(scene) {
         this.scene = scene
         //create a new vector 
-        this.upVec = new THREE.Vector3(0,1,0)
+        this.upVec = new THREE.Vector3(0, 1, 0)
         this.pillards = new THREE.Group()
         this.pillard
 
@@ -40,7 +48,7 @@ class SpherePillards {
 
         })
 
-        
+
 
         //Loading the model
         this.modelLoader.load('./assets/models/pillard.glb', (glb) => {
@@ -60,20 +68,37 @@ class SpherePillards {
             //loading the scene onto the screen
             // this.scene.add(glb.scene)
         })
+        //Aranging GUI elements inside the folder
+        const sphereFolder = MyGUI.addFolder('Sphere Pillards')
+        sphereFolder.open()
+
+        sphereFolder.add(this.params, 'waveSpeed', 0.001, 2).name('Wave Speed')
+        sphereFolder.add(this.params, 'subDiv', 1, 5).name('Ico Subdivisions').onChange(this.computePositions)
     }
 
     //function call when the pillars module is loaded 
     computePositions() {
+        this.scene.traverese(child => {
+            if (child.name == 'ico') {
+                // console.log(child)
+                this.scene.remove(child)
+            }
+        })
         //console.log(this.pillard)
+
+
+
+
 
         //ecosphere to take the pillars
         //creating the geometry
-        const sphereGeom = new THREE.IcosahedronGeometry(2, 3)
+        const sphereGeom = new THREE.IcosahedronGeometry(2, this.params.subDiv)
         const sphereMat = this.gMatCap
         //create the instance of the sphere
-        const sphere = new THREE.Mesh(sphereGeom,sphereMat)
+        const sphere = new THREE.Mesh(sphereGeom, sphereMat)
+        sphere.name = 'ico'
         // const sphere = new THREE.Mesh(sphereGeom, new THREE.MeshNormalMaterial({
-           
+
         //     wireframe: true
 
         // }))
@@ -130,10 +155,10 @@ class SpherePillards {
                 //create a clone of pillards
 
                 const c = this.pillard.clone()
-                 //create a position vector 
-                 const posVec = new THREE.Vector3(verArray[i].x, verArray[i].y, verArray[i].z)
+                //create a position vector 
+                const posVec = new THREE.Vector3(verArray[i].x, verArray[i].y, verArray[i].z)
                 c.scale.multiplyScalar(.2)
-               
+
                 c.position.copy(posVec)
                 c.quaternion.setFromUnitVectors(this.upVec, posVec.normalize())
                 this.pillards.add(c)
@@ -151,17 +176,33 @@ class SpherePillards {
 
 
     update() {
-        // console.log('yoyo')
-        let i = 0; 
-        while (i < this.pillards.children.length) {
-            this.pillards.children[i].children[0].position.y = (Math.sin(Date.now() * 0.01 + this.pillards.children[i].position.x) +1) * 1.5
-            i++; 
+        if (SoundReactor.playFlag) {
+            //console.log('the audio is playing')
+            //console.log(SoundReactor.fdata)
+            let i = 0;
+            while (i < this.pillards.children.length) {
+                this.pillards.children[i].children[0].position.y = SoundReactor.fdata[i] / 255 * 3
+                i++;
+
+            }
+        } else {
+            let i = 0;
+            while (i < this.pillards.children.length) {
+                this.pillards.children[i].children[0].position.y = (Math.sin(Date.now() * 0.01 * this.params.waveSpeed + this.pillards.children[i].position.x) + 1) * 1.5
+                i++;
+
+            }
 
         }
+
+
+
+
 
     }
 
     bind() {
+        this.computePositions = this.computePositions.bind(this)
 
     }
 }
