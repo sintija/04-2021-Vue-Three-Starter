@@ -1,11 +1,8 @@
-import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import {
+    GLTFLoader
+} from 'three/examples/jsm/loaders/GLTFLoader'
 import * as THREE from 'three'
 import LoadingController from './LoadingController'
-
-
-
-
-
 
 class Floor {
     constructor() {
@@ -20,19 +17,17 @@ class Floor {
 
         this.modelLoader.load('./assets/models/floor.glb', (glb) => {
             //console.log(glb)
-            glb.scene.traverse(child =>  {
-                if(child instanceof THREE.Mesh) {
+            glb.scene.traverse(child => {
+                if (child instanceof THREE.Mesh) {
                     this.floor = child
-
                 }
-
 
             })
 
             this.floor.translateY(-4)
             this.floor.scale.multiplyScalar(1.5)
 
-             this.scene.add(this.floor)
+            this.scene.add(this.floor)
 
         })
     }
